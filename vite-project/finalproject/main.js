@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.120.1/examples/jsm/controls/OrbitControls.js'
-
+import { StereoEffect} from './StereoEffect.js'
 
 
 
@@ -18,11 +18,28 @@ const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
 
+scene.add(camera);
+
+
+
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize( window.innerWidth, window.innerHeight);
 camera.position.set(0,0,0);
+let windowHalfX = window.innerWidth / 2;
+let windowHalfY = window.innerHeight / 2;
 
-renderer.render(scene,camera);
+
+
+const effect = new StereoEffect( renderer );
+effect.setSize( window.innerWidth, window.innerHeight );
+effect.render( scene, camera );
+
+//window.addEventListener( 'resize', onWindowResize );
+
+			
+
+
+
 
 
 let materialArray = [];
@@ -43,7 +60,7 @@ materialArray.push(new THREE.MeshBasicMaterial( { map: texture_lf }));
 for (let i = 0; i < 6; i++)
   materialArray[i].side = THREE.BackSide;
    
-let skyboxGeo = new THREE.BoxGeometry( 1000, 1000, 1000);
+let skyboxGeo = new THREE.BoxGeometry( 100, 100, 100);
 let skybox = new THREE.Mesh( skyboxGeo, materialArray );
 scene.add( skybox );
 
@@ -52,25 +69,30 @@ const pointLight = new THREE.PointLight(0xffffff);
 pointLight.position.set(0,0,1000);
 scene.add(pointLight);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+const element = renderer.domElement;
+
+
+
+const controls = new OrbitControls(camera, element);
 controls.addEventListener('change', renderer);
 controls.minDistance = 0;
 controls.maxDistance = 1;
 
 function moveCamera() {
   const t = document.body.getBoundingClientRect().top;
-  camera.position.z = t * -0.00001;
-  camera.position.x = t * -0.0002;
-  camera.rotation.y = t * 0.00006;
+  camera.position.z = t * 1;
+  camera.position.x = t * 1;
+  camera.rotation.y = t * 1;
 }
 
 document.body.onscroll = moveCamera;
-//moveCamera();
+moveCamera();
 
 function animate(){
   requestAnimationFrame(animate);
 
   renderer.render(scene,camera);
+  effect.render(scene, camera);
 }
 
 animate();
