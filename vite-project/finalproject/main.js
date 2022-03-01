@@ -18,29 +18,60 @@ const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
 
+camera.position.setZ(60);
+
+
+
+const loader = new GLTFLoader();
+loader.load(
+	'grass1.gltf',
+	( gltf ) => {
+		// called when the resource is loaded
+    var grass = gltf.scene;
+
+    for (var i = 0; i < 1000; i+=30){
+
+      var grassTemp =grass.clone(); 
+      
+      grassTemp.scale.set(1,1,1)
+      grassTemp.position.z =i
+      grassTemp.position.y = -10
+      grassTemp.position.x =i
+      scene.add( grassTemp );
+      
+      grassTemp.position.z =-i
+      grassTemp.position.y = -10
+      grassTemp.position.x =-i
+      scene.add( grassTemp );
+
+      grassTemp.position.z =i
+      grassTemp.position.y = -10
+      grassTemp.position.x =-i
+      scene.add( grassTemp );
+
+      grassTemp.position.z =-i
+      grassTemp.position.y = -10
+      grassTemp.position.x =i
+      scene.add( grassTemp );
+    }
+		
+	},
+	( xhr ) => {
+		// called while loading is progressing
+		console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+	},
+	( error ) => {
+		// called when loading has errors
+		console.error( 'An error happened', error );
+	},
+);
+
 scene.add(camera);
-
-
-
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize( window.innerWidth, window.innerHeight);
 camera.position.set(0,0,0);
-let windowHalfX = window.innerWidth / 2;
-let windowHalfY = window.innerHeight / 2;
-
-
 
 const effect = new StereoEffect( renderer );
 effect.setSize( window.innerWidth, window.innerHeight );
 effect.render( scene, camera );
-
-//window.addEventListener( 'resize', onWindowResize );
-
-			
-
-
-
-
 
 let materialArray = [];
 let texture_ft = new THREE.TextureLoader().load( 'meadow_ft.jpg');
@@ -66,7 +97,7 @@ scene.add( skybox );
 
 
 const pointLight = new THREE.PointLight(0xffffff);
-pointLight.position.set(0,0,1000);
+pointLight.position.set(0,0,0);
 scene.add(pointLight);
 
 const element = renderer.domElement;
@@ -74,7 +105,7 @@ const element = renderer.domElement;
 
 
 const controls = new OrbitControls(camera, element);
-controls.addEventListener('change', renderer);
+// controls.addEventListener('change', renderer);
 controls.minDistance = 0;
 controls.maxDistance = 1;
 
@@ -85,13 +116,14 @@ function moveCamera() {
   camera.rotation.y = t * 1;
 }
 
-document.body.onscroll = moveCamera;
-moveCamera();
+// document.body.onscroll = moveCamera;
 
+moveCamera();
 function animate(){
+  
   requestAnimationFrame(animate);
 
-  renderer.render(scene,camera);
+  //renderer.render(scene,camera);
   effect.render(scene, camera);
 }
 
