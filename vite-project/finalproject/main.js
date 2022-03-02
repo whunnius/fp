@@ -29,31 +29,31 @@ loader.load(
 		// called when the resource is loaded
     var grass = gltf.scene;
 
-    for (var i = 0; i < 1000; i+=30){
+    for (var i = 0; i < 150; i+=15){
+      for(var j = 0; j < 150; j+=15){
 
-      var grassTemp =grass.clone(); 
-      
-      grassTemp.scale.set(1,1,1)
-      grassTemp.position.z =i
-      grassTemp.position.y = -10
-      grassTemp.position.x =i
-      scene.add( grassTemp );
-      
-      grassTemp.position.z =-i
-      grassTemp.position.y = -10
-      grassTemp.position.x =-i
-      scene.add( grassTemp );
+        var grassTemp =grass.clone(); 
+        
+        grassTemp.scale.set(1,1,1)
+        grassTemp.position.z =i
+        grassTemp.position.y = -14
+        grassTemp.position.x =j
+        scene.add( grassTemp );
+        
+        grassTemp.position.z =-i
+        grassTemp.position.y = -14
+        grassTemp.position.x =-j
+        scene.add( grassTemp );
 
-      grassTemp.position.z =i
-      grassTemp.position.y = -10
-      grassTemp.position.x =-i
-      scene.add( grassTemp );
 
-      grassTemp.position.z =-i
-      grassTemp.position.y = -10
-      grassTemp.position.x =i
-      scene.add( grassTemp );
+       
+
+        
     }
+
+      }
+
+      
 		
 	},
 	( xhr ) => {
