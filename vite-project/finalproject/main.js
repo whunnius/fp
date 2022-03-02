@@ -6,14 +6,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.120.1/examples/jsm/controls/OrbitControls.js'
 import { StereoEffect} from './StereoEffect.js'
 
-
-
-
-
+//Setting up camera, render, scene
 const scene = new THREE.Scene();
-
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
@@ -32,7 +27,7 @@ controls.maxDistance = 1;
 controls.update();
 
 
-
+//How objects get loaded into 
 const loader = new GLTFLoader();
 loader.load(
 	'grass1.gltf',
@@ -59,10 +54,8 @@ loader.load(
         }
 
       }
-
-      
-		
 	},
+
 	( xhr ) => {
 		// called while loading is progressing
 		console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
@@ -79,6 +72,7 @@ const effect = new StereoEffect( renderer );
 effect.setSize( window.innerWidth, window.innerHeight );
 effect.render( scene, camera );
 
+// Loading images into VR environment
 let materialArray = [];
 let texture_ft = new THREE.TextureLoader().load( 'meadow_ft.jpg');
 let texture_bk = new THREE.TextureLoader().load( 'meadow_bk.jpg');
@@ -86,7 +80,8 @@ let texture_up = new THREE.TextureLoader().load( 'meadow_up.jpg');
 let texture_dn = new THREE.TextureLoader().load( 'meadow_dn.jpg');
 let texture_rt = new THREE.TextureLoader().load( 'meadow_rt.jpg');
 let texture_lf = new THREE.TextureLoader().load( 'meadow_lf.jpg');
-  
+
+//Overlapping mesh objects with textures  
 materialArray.push(new THREE.MeshBasicMaterial( { map: texture_ft }));
 materialArray.push(new THREE.MeshBasicMaterial( { map: texture_bk }));
 materialArray.push(new THREE.MeshBasicMaterial( { map: texture_up }));
@@ -110,7 +105,7 @@ const pointLight = new THREE.PointLight(0xffffff,1.2);
 pointLight.position.set(-100,0,-100);
 scene.add(pointLight);
 
-
+//Creating Red dot objects to point and move to
 const targets = []
 
 const target0 = new THREE.Mesh(
@@ -167,6 +162,7 @@ function moveCamera() {
 
 // document.body.onscroll = moveCamera;
 
+// Run program
 moveCamera();
 function animate(){
   
