@@ -111,7 +111,50 @@ pointLight.position.set(-100,0,-100);
 scene.add(pointLight);
 
 
+const targets = []
 
+const target0 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.25),
+  new THREE.MeshLambertMaterial({color:'red'})
+)
+target0.position.set(-100,-2,-100)
+targets.push(target0)
+
+const target1 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.25),
+  new THREE.MeshLambertMaterial({color:'red'})
+)
+target1.position.set(-100,-2,-110)
+targets.push(target1)
+
+const target2 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.25),
+  new THREE.MeshLambertMaterial({color:'red'})
+)
+target2.position.set(-110,-2,-100)
+targets.push(target2)
+
+const target3 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.25),
+  new THREE.MeshLambertMaterial({color:'red'})
+)
+target3.position.set(-90,-2,-100)
+targets.push(target3)
+
+const target4 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.25),
+  new THREE.MeshLambertMaterial({color:'red'})
+)
+target4.position.set(-100,-2,-90)
+targets.push(target4)
+
+targets.forEach((target)=>{
+  // target.userData.clickable = true
+  scene.add(target)
+  // on(target,'click',(e)=>{
+  //   console.log("clicked target",e.target)
+  // })
+})
 
 
 
