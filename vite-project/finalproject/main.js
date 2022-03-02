@@ -18,7 +18,18 @@ const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
 
-camera.position.setZ(60);
+const element = renderer.domElement;
+
+//camera.position.set( 100, 0, 100 );
+const controls = new OrbitControls(camera, element);
+// controls.addEventListener('change', renderer);
+controls.target.set(-100,0,-100);
+controls.enableZoom = false;
+controls.minDistance = 1;
+controls.maxDistance = 1;
+
+
+controls.update();
 
 
 
@@ -29,8 +40,8 @@ loader.load(
 		// called when the resource is loaded
     var grass = gltf.scene;
 
-    for (var i = 0; i < 150; i+=15){
-      for(var j = 0; j < 150; j+=15){
+    for (var i = 0; i < 300; i+=40){
+      for(var j = 0; j < 300; j+=40){
 
         var grassTemp =grass.clone(); 
         
@@ -45,11 +56,7 @@ loader.load(
         grassTemp.position.x =-j
         scene.add( grassTemp );
 
-
-       
-
-        
-    }
+        }
 
       }
 
@@ -66,8 +73,7 @@ loader.load(
 	},
 );
 
-scene.add(camera);
-camera.position.set(0,0,0);
+
 
 const effect = new StereoEffect( renderer );
 effect.setSize( window.innerWidth, window.innerHeight );
@@ -91,23 +97,23 @@ materialArray.push(new THREE.MeshBasicMaterial( { map: texture_lf }));
 for (let i = 0; i < 6; i++)
   materialArray[i].side = THREE.BackSide;
    
-let skyboxGeo = new THREE.BoxGeometry( 100, 100, 100);
+let skyboxGeo = new THREE.BoxGeometry( 1000, 1000, 1000);
 let skybox = new THREE.Mesh( skyboxGeo, materialArray );
 scene.add( skybox );
 
 
-const pointLight = new THREE.PointLight(0xffffff);
-pointLight.position.set(0,0,0);
+const pointLight2 = new THREE.PointLight(0xffffff,1.2);
+pointLight2.position.set(0,0,0);
+scene.add(pointLight2);
+
+const pointLight = new THREE.PointLight(0xffffff,1.2);
+pointLight.position.set(-100,0,-100);
 scene.add(pointLight);
 
-const element = renderer.domElement;
 
 
 
-const controls = new OrbitControls(camera, element);
-// controls.addEventListener('change', renderer);
-controls.minDistance = 0;
-controls.maxDistance = 1;
+
 
 function moveCamera() {
   const t = document.body.getBoundingClientRect().top;
@@ -123,8 +129,8 @@ function animate(){
   
   requestAnimationFrame(animate);
 
-  //renderer.render(scene,camera);
   effect.render(scene, camera);
+  
 }
 
 animate();
