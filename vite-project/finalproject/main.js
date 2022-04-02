@@ -7,8 +7,7 @@ import { OrbitControls } from 'https://unpkg.com/three@0.120.1/examples/jsm/cont
 import { StereoEffect} from './StereoEffect.js'
 
 
-
-
+var pointer, raycaster;
 
 const scene = new THREE.Scene();
 
@@ -17,6 +16,11 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
+
+pointer = new THREE.Vector2();
+pointer.x = 0
+pointer.y = 0
+raycaster = new THREE.Raycaster();
 
 const element = renderer.domElement;
 
@@ -113,13 +117,6 @@ scene.add(pointLight);
 
 const targets = []
 
-const target0 = new THREE.Mesh(
-  new THREE.SphereGeometry(0.25),
-  new THREE.MeshLambertMaterial({color:'red'})
-)
-target0.position.set(-100,-2,-100)
-targets.push(target0)
-
 const target1 = new THREE.Mesh(
   new THREE.SphereGeometry(0.25),
   new THREE.MeshLambertMaterial({color:'red'})
@@ -149,14 +146,17 @@ target4.position.set(-100,-2,-90)
 targets.push(target4)
 
 targets.forEach((target)=>{
-  // target.userData.clickable = true
   scene.add(target)
-  // on(target,'click',(e)=>{
-  //   console.log("clicked target",e.target)
-  // })
 })
 
-
+var reticle = new THREE.Mesh(
+  new THREE.BoxGeometry( 0.01, 0.01, 0.01 ),
+  new THREE.MeshBasicMaterial( {color: 0xffffff, blending: THREE.AdditiveBlending, side: THREE.DoubleSide })
+);
+reticle.position.z = -1;
+reticle.lookAt(camera.position);
+camera.add(reticle);
+scene.add(camera);
 
 function moveCamera() {
   const t = document.body.getBoundingClientRect().top;
@@ -167,11 +167,27 @@ function moveCamera() {
 
 // document.body.onscroll = moveCamera;
 
+function hoverSpheres() {
+  raycaster.setFromCamera(pointer, camera);
+  const intersects = raycaster.intersectObjects(targets);
+  for (let i = 0; i < intersects.length; i++) {
+    movePlayer(intersects[i].object.position.x, intersects[i].object.position.z);
+  }
+}
+
+function movePlayer( x, z ) {
+  controls.target.set( x, 0, z );
+  target1.position.set( x, -2, z - 10 );
+  target2.position.set( x - 10, -2, z );
+  target3.position.set( x + 10, -2, z );
+  target4.position.set( x, -2, z + 10 );
+}
+
 moveCamera();
 function animate(){
   
   requestAnimationFrame(animate);
-
+  hoverSpheres();
   effect.render(scene, camera);
   
 }
