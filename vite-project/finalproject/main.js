@@ -104,13 +104,21 @@ let skybox = new THREE.Mesh( skyboxGeo, materialArray );
 scene.add( skybox );
 
 
+const pointLight = new THREE.PointLight(0xffffff,1.2);
+pointLight.position.set(-100,0,-100);
+scene.add(pointLight);
+
 const pointLight2 = new THREE.PointLight(0xffffff,1.2);
 pointLight2.position.set(0,0,0);
 scene.add(pointLight2);
 
-const pointLight = new THREE.PointLight(0xffffff,1.2);
-pointLight.position.set(-100,0,-100);
-scene.add(pointLight);
+const pointLight3 = new THREE.PointLight(0xffffff,1.2);
+pointLight3.position.set(-200,0,-200);
+scene.add(pointLight3);
+
+const pointLight4 = new THREE.PointLight(0xffffff,1.2);
+pointLight4.position.set(-300,0,-300);
+scene.add(pointLight4);
 
 //Creating Red dot objects to point and move to
 const targets = []
@@ -163,13 +171,37 @@ function moveCamera() {
   camera.rotation.y = t * 1;
 }
 
+var tick = 0;
+
+
+
 // document.body.onscroll = moveCamera;
 
 function hoverSpheres() {
   raycaster.setFromCamera(pointer, camera);
   const intersects = raycaster.intersectObjects(targets);
+
+
   for (let i = 0; i < intersects.length; i++) {
-    movePlayer(intersects[i].object.position.x, intersects[i].object.position.z);
+
+    tick++;
+    
+    if(tick>=180 && tick >= 1){
+      movePlayer(intersects[i].object.position.x, intersects[i].object.position.z);
+      intersects[i].object.material.color.setHex( 0xff0000 );
+      
+      tick = 0;
+    }
+    else{
+      intersects[i].object.material.color.setHex( 0xffffff );
+      
+    }
+  }
+  if(intersects.length == 0 && tick !=0){
+    targets.forEach((target)=>{
+      target.material.color.setHex( 0xff0000 );
+    })
+    tick = 0;
   }
 }
 
