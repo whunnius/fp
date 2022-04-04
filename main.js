@@ -1,4 +1,4 @@
-import 'style.css'
+import 'fp/style.css'
 
 import * as THREE from 'three';
 
