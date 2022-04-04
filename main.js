@@ -1,4 +1,4 @@
-import 'style.css'
+import 'https://github.com/whunnius/fp/blob/d8ed8c3021bab936411ad96395119b49c26bbade/style.css'
 
 import * as THREE from 'three';
 
