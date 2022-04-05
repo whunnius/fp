@@ -1,10 +1,10 @@
-import './fp/style.css'
+import '/fp/style.css'
 
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 
 import { GLTFLoader } from 'https://unpkg.com/three@0.129.0/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.120.1/examples/jsm/controls/OrbitControls.js'
-import { StereoEffect} from './fp/StereoEffect.js'
+import { StereoEffect} from '/fp/StereoEffect.js'
 
 
 var pointer, raycaster;
