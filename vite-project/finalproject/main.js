@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.120.1/examples/jsm/controls/OrbitControls.js'
 import { StereoEffect} from './StereoEffect.js'
+import { GUI } from 'dat.gui'
 
 
 var pointer, raycaster;
@@ -189,17 +190,19 @@ function hoverSpheres() {
     if(tick>=180 && tick >= 1){
       movePlayer(intersects[i].object.position.x, intersects[i].object.position.z);
       intersects[i].object.material.color.setHex( 0xff0000 );
-      
+      plantFolder.close()
       tick = 0;
     }
     else{
       intersects[i].object.material.color.setHex( 0xffffff );
       
+      plantFolder.open()
     }
   }
   if(intersects.length == 0 && tick !=0){
     targets.forEach((target)=>{
       target.material.color.setHex( 0xff0000 );
+      plantFolder.close()
     })
     tick = 0;
   }
@@ -213,7 +216,21 @@ function movePlayer( x, z ) {
   target4.position.set( x, -2, z + 10 );
 }
 
+
+//text = new sampleText();
+//setValue();
+
 moveCamera();
+var text =
+{
+    Name: 'This plant very cool jaja'
+}
+
+const gui = new GUI()
+const plantFolder = gui.addFolder('Plant Details')
+plantFolder.add(text, 'Name');
+
+
 function animate(){
   
   requestAnimationFrame(animate);
