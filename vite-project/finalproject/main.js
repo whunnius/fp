@@ -1,4 +1,4 @@
-import './style.css'
+//import './style.css'
 
 import * as THREE from 'three';
 
@@ -74,7 +74,79 @@ loader.load(
 	},
 );
 
+loader.load(
+	'dandelion.gltf',
+	( gltf ) => {
+		// called when the resource is loaded
+    var grass = gltf.scene;
 
+    for (var i = 0; i < 300; i+=40){
+      for(var j = 0; j < 300; j+=40){
+
+        var grassTemp =grass.clone(); 
+        
+        grassTemp.scale.set(1,1,1)
+        grassTemp.position.z =i
+        grassTemp.position.y = -14
+        grassTemp.position.x =j
+        scene.add( grassTemp );
+        
+        grassTemp.position.z =-i
+        grassTemp.position.y = -14
+        grassTemp.position.x =-j
+        scene.add( grassTemp );
+
+        }
+
+      }
+	},
+
+	( xhr ) => {
+		// called while loading is progressing
+		console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+	},
+	( error ) => {
+		// called when loading has errors
+		console.error( 'An error happened', error );
+	},
+);
+
+loader.load(
+	'fern.gltf',
+	( gltf ) => {
+		// called when the resource is loaded
+    var grass = gltf.scene;
+
+    for (var i = 0; i < 300; i+=30){
+      for(var j = 0; j < 300; j+=30){
+
+        var grassTemp =grass.clone(); 
+        
+        grassTemp.scale.set(1,1,1)
+        grassTemp.position.z =i
+        grassTemp.position.y = -14
+        grassTemp.position.x =j
+        scene.add( grassTemp );
+        
+        grassTemp.position.z =-i
+        grassTemp.position.y = -14
+        grassTemp.position.x =-j
+        scene.add( grassTemp );
+
+        }
+
+      }
+	},
+
+	( xhr ) => {
+		// called while loading is progressing
+		console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+	},
+	( error ) => {
+		// called when loading has errors
+		console.error( 'An error happened', error );
+	},
+);
 
 const effect = new StereoEffect( renderer );
 effect.setSize( window.innerWidth, window.innerHeight );
