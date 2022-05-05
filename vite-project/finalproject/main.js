@@ -16,6 +16,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
 
+const plantTarget =[]
 pointer = new THREE.Vector2();
 pointer.x = 0
 pointer.y = 0
@@ -78,27 +79,32 @@ loader.load(
 	'dandelion.gltf',
 	( gltf ) => {
 		// called when the resource is loaded
-    var grass = gltf.scene;
-
-    for (var i = 0; i < 300; i+=40){
-      for(var j = 0; j < 300; j+=40){
-
-        var grassTemp =grass.clone(); 
+    var dand = gltf.scene;
         
-        grassTemp.scale.set(1,1,1)
-        grassTemp.position.z =i
-        grassTemp.position.y = -14
-        grassTemp.position.x =j
-        scene.add( grassTemp );
+    // var dandTemp =dand.clone(); 
+    // dandTemp.scale.set(1,1,1);
+    // dandTemp.position.set(-100,-2,-90)
+    // scene.add(dandTemp);
+    // plantTarget.push(dandTemp);
+
+    for (var i = 0; i < 200; i+=40){
+      for(var j = 0; j < 200; j+=40){
+
+        var dandTemp =dand.clone(); 
         
-        grassTemp.position.z =-i
-        grassTemp.position.y = -14
-        grassTemp.position.x =-j
-        scene.add( grassTemp );
+        dandTemp.scale.set(1,1,1)
+        
+        dandTemp.position.z =-i
+        dandTemp.position.y = -14
+        dandTemp.position.x =-j
+        scene.add( dandTemp );
+        plantTarget.push(dandTemp);
 
         }
 
       }
+
+
 	},
 
 	( xhr ) => {
@@ -115,23 +121,25 @@ loader.load(
 	'fern.gltf',
 	( gltf ) => {
 		// called when the resource is loaded
-    var grass = gltf.scene;
+    var fern = gltf.scene;
 
     for (var i = 0; i < 300; i+=30){
       for(var j = 0; j < 300; j+=30){
 
-        var grassTemp =grass.clone(); 
+        var fernTemp =fern.clone(); 
         
-        grassTemp.scale.set(1,1,1)
-        grassTemp.position.z =i
-        grassTemp.position.y = -14
-        grassTemp.position.x =j
-        scene.add( grassTemp );
-        
-        grassTemp.position.z =-i
-        grassTemp.position.y = -14
-        grassTemp.position.x =-j
-        scene.add( grassTemp );
+        fernTemp.scale.set(1,1,1)
+        fernTemp.position.z =i
+        fernTemp.position.y = -14
+        fernTemp.position.x =j
+        scene.add( fernTemp );
+        //plantTarget.add(fernTemp)
+
+        fernTemp.position.z =-i
+        fernTemp.position.y = -14
+        fernTemp.position.x =-j
+        scene.add( fernTemp );
+        //plantTarget.add(fernTemp)
 
         }
 
@@ -147,7 +155,14 @@ loader.load(
 		console.error( 'An error happened', error );
 	},
 );
-
+var text =
+{
+    Name: 'This plant very cool jaja',
+    SciName: "Plant is located \nin prarie fields",
+    Family: 'Very Gud Family',
+    Subfamily: 'Very bad subFamily',
+    Order: 'No Order :('
+}
 const effect = new StereoEffect( renderer );
 effect.setSize( window.innerWidth, window.innerHeight );
 effect.render( scene, camera );
@@ -247,34 +262,67 @@ function moveCamera() {
 var tick = 0;
 
 
+function plantIntersects() {
+  raycaster.setFromCamera(pointer, camera);
+  const intersects = raycaster.intersectObjects(plantTarget);
+  //const intersects2 = raycaster.intersectObjects(targets);
+
+  for (let i = 0; i < intersects.length; i++) {
+    tick++;
+    
+    if(tick>=180 && tick>=1){
+      plantFolder.close()
+      //intersects[i].object.material.color.setHex( 0xff0000 );
+      tick = 0;
+    }
+    
+    else{
+        //intersects[i].object.material.color.setHex( 0xffffff );
+        text.Name = 'Dandelion'
+        text.SciName = 'Taraxacum'
+        text.Family= 'Asteracae'
+        text.Subfamily= 'Cichorioideae'
+        text.Order= 'Asterales'
+        plantFolder.open()
+    }
+    
+    
+  }
+
+  if(intersects.length == 0 && tick !=0){
+    targets.forEach((targets)=>{
+      //targets.material.color.setHex( 0xff0000 );
+      plantFolder.close()
+    })
+    tick = 0;
+  }
+}
 
 // document.body.onscroll = moveCamera;
 
+
+
 function hoverSpheres() {
   raycaster.setFromCamera(pointer, camera);
-  const intersects = raycaster.intersectObjects(targets);
+  const intersects2 = raycaster.intersectObjects(targets);
 
 
-  for (let i = 0; i < intersects.length; i++) {
+  for (let i = 0; i < intersects2.length; i++) {
 
     tick++;
     
-    if(tick>=180 && tick >= 1){
-      movePlayer(intersects[i].object.position.x, intersects[i].object.position.z);
-      intersects[i].object.material.color.setHex( 0xff0000 );
-      plantFolder.close()
+    if(tick>=180 && tick>=1){
+      movePlayer(intersects2[i].object.position.x, intersects2[i].object.position.z);
+      intersects2[i].object.material.color.setHex( 0xff0000 );
       tick = 0;
     }
     else{
-      intersects[i].object.material.color.setHex( 0xffffff );
-      
-      plantFolder.open()
+      intersects2[i].object.material.color.setHex( 0xffffff );
     }
   }
-  if(intersects.length == 0 && tick !=0){
+  if(intersects2.length == 0 && tick !=0){
     targets.forEach((target)=>{
       target.material.color.setHex( 0xff0000 );
-      plantFolder.close()
     })
     tick = 0;
   }
@@ -293,19 +341,21 @@ function movePlayer( x, z ) {
 //setValue();
 
 moveCamera();
-var text =
-{
-    Name: 'This plant very cool jaja'
-}
 
-const gui = new GUI()
+
+const gui = new GUI({width:300})
 const plantFolder = gui.addFolder('Plant Details')
-plantFolder.add(text, 'Name');
+plantFolder.add(text, 'Name').listen();
+plantFolder.add(text, 'SciName').listen();
+plantFolder.add(text, 'Family').listen();
+plantFolder.add(text, 'Subfamily').listen();
+plantFolder.add(text, 'Order').listen();
 
 
 function animate(){
   
   requestAnimationFrame(animate);
+  plantIntersects();
   hoverSpheres();
   effect.render(scene, camera);
   
